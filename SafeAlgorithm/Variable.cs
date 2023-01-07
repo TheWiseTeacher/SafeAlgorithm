@@ -28,5 +28,7 @@ namespace SafeAlgorithm
 
         public string Type { get; set; }
 
+        public bool ReadOnly { get; set; } = true;
+
     }
 }
