@@ -35,6 +35,7 @@ namespace SafeAlgorithm
 
         private void runToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Save();
             CompileAndRun();
         }
 
@@ -52,12 +53,9 @@ namespace SafeAlgorithm
         {
             F.ClearLog();
 
-
-            //codeLines.Clear();
-            //codeLines = codeEditor.Lines.ToList<string>();
-
+            DateTime parseStartTime = DateTime.Now;
             F.Log($"Found {codeEditor.Lines.Length} Lines of code !");
-
+            F.Log($"# Started Parsing code...");
 
             string line;
             MainBloc mb = null;
@@ -66,18 +64,19 @@ namespace SafeAlgorithm
             {
                 line = codeEditor.Lines[i].Trim();
 
-                if (line.Split(' ')[0].Trim().ToUpper() == "ALGORITHME")
+                if (line.IsFirstWord("ALGORITHME"))
                 {
                     if(mb == null)
                     {
-
-
                         mb = new MainBloc(codeEditor.Lines, i);
+
+                        if (!mb.CodeReady)
+                            break;
                     }
                     else
                     {
-
-
+                        F.Log($"Error : Multiple start points detected");
+                        break;
                     }
 
                     continue;
@@ -88,9 +87,11 @@ namespace SafeAlgorithm
             {
                 F.Log($"Error : Can't find the ALGORITHME keyword");
             }
+
+            F.Log($"# Parsed in : {(DateTime.Now - parseStartTime).TotalMilliseconds} ms");
+        
+        
         }
-
-
 
 
 
